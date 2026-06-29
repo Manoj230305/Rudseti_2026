@@ -71,11 +71,8 @@ class Certificates
 
     // Function to add text to image with proper alignment
     private function addText($image, $text, $fontFile, $fontColor, $fontSize, $startX, $endX, $y) {
-        // Add padding to prevent text from touching the boundaries
-        $padding = 15;
-        $effectiveStartX = $startX + $padding;
-        $effectiveEndX = $endX - $padding;
-        $maxWidth = $effectiveEndX - $effectiveStartX;
+        // Maximum allowed text width within the specified range
+        $maxWidth = $endX - $startX;
     
         // Calculate text bounding box
         $textBox = imagettfbbox($fontSize, 0, $fontFile, $text);
@@ -86,23 +83,16 @@ class Certificates
             // Calculate new font size to fit the text within the range
             $newFontSize = $fontSize * ($maxWidth / $textWidth);
     
-            // Recalculate text bounding box with the new font size to center it perfectly
-            $newTextBox = imagettfbbox($newFontSize, 0, $fontFile, $text);
-            $newTextWidth = $newTextBox[2] - $newTextBox[0];
-            
-            // Calculate X-coordinate to center the scaled text within the effective range
-            $textX = $effectiveStartX + ($maxWidth - $newTextWidth) / 2;
-    
-            // Add text with adjusted font size (centered)
-            imagettftext($image, $newFontSize, 0, $textX, $y, $fontColor, $fontFile, $text);
+            // Add text with adjusted font size
+            imagettftext($image, $newFontSize, 0, $startX, $y, $fontColor, $fontFile, $text);
         } else {
-            // Calculate X-coordinate to center text within the effective range
-            $textX = $effectiveStartX + ($maxWidth - $textWidth) / 2;
+            // Calculate X-coordinate to center text within the specified range
+            $textX = $startX + ($maxWidth - $textWidth) / 2;
     
-            // Add text to the image with original font size (centered)
+            // Add text to the image with original font size
             imagettftext($image, $fontSize, 0, $textX, $y, $fontColor, $fontFile, $text);
         }
-    }
+    }   
 
     public function getInitials($string) {
         if (preg_match('/\(([^)]+)\)/', $string, $matches)) {
@@ -201,7 +191,7 @@ class Certificates
         $varText6 = isset($_SESSION['End_Date']) ? $_SESSION['End_Date'] : 'Null';
         $varText7 = isset($_SESSION['Sponsors']) ? $_SESSION['Sponsors'] : 'Null';
 
-        // $this->addFixedText($mainImage, "THIS IS A SAMPLE", $textFontBold, $textColor, 24, 650, 800);
+        // $this->addFixedText($mainImage, "THIS IS A SAMPLE", $textFontBold, $textColor, 24, 1850, 1103);
         // $this->addFixedText($mainImage, "THIS IS A SAMPLE", $textFontBold, $textColor, 24, 1150, 800);
         // $this->addFixedText($mainImage, "THIS IS A SAMPLE", $textFontBold, $textColor, 24, 1370, 800);
         // $this->addFixedText($mainImage, "THIS IS A SAMPLE", $textFontBold, $textColor, 24, 250, 875);
@@ -217,13 +207,13 @@ class Certificates
         // $this->addFixedText($mainImage, "THIS IS A SAMPLE", $textFontBold, $textColor, 24, 1890, 1100);
 
         // Add variable position texts with alignment
-        $this->addText($mainImage, strtoupper($varText1), $textFont, $textColor, 24, 645, 1257, 913);
-        $this->addText($mainImage, strtoupper($varText2), $textFont, $textColor, 24, 1370, 1890, 913);
-        $this->addText($mainImage, strtoupper($varText3), $textFont, $textColor, 24, 300, 1630, 960);
-        $this->addText($mainImage, strtoupper($varText4), $textFontBold, $textColor, 24, 880, 1890, 1006);
-        $this->addText($mainImage, $varText5, $textFont, $textColor, 24, 565, 1150, 1058);
-        $this->addText($mainImage, $varText6, $textFont, $textColor, 24, 1230, 1890, 1058);
-        $this->addText($mainImage, strtoupper($varText7), $textFontBold, $textColor, 24, 750, 1890, 1103);
+        $this->addText($mainImage, strtoupper($varText1), $textFont, $textColor, 24, 655, 1245, 913);
+        $this->addText($mainImage, strtoupper($varText2), $textFont, $textColor, 24, 1462, 1823, 913);
+        $this->addText($mainImage, strtoupper($varText3), $textFont, $textColor, 24, 302, 1623, 960);
+        $this->addText($mainImage, strtoupper($varText4), $textFontBold, $textColor, 24, 880, 1848, 1006);
+        $this->addText($mainImage, $varText5, $textFont, $textColor, 24, 601, 1000, 1058);
+        $this->addText($mainImage, $varText6, $textFont, $textColor, 24, 1230, 1848, 1058);
+        $this->addText($mainImage, strtoupper($varText7), $textFontBold, $textColor, 24, 750, 1845, 1103);
 
         // Determine the next available image name in the batch folder
         // $imageCount = count(glob($this->batchFolder . '*.png')) + 1;

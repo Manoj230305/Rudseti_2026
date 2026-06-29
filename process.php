@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['username']) || !isset($_SESSION['admin'])) {
+    header("Location: logout.php");
+    exit();
+}
+
 require 'vendor/autoload.php'; // Include PhpSpreadsheet library
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -283,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
                                 </div>
                                 <div>
                                     <h3 class="section-title mb-0">Record Processing Engine</h3>
-                                    <p class="subtitle mb-0">CB_RSETI Automated Batch System</p>
+                                    <p class="subtitle mb-0">RUDSETI Automated Batch System</p>
                                 </div>
                             </div>
                             <span class="status-badge" id="completionStatus">
@@ -420,7 +426,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
                     completionStatus.className = "status-badge bg-success-subtle text-success border border-success-subtle px-3 py-2";
                     
                     setTimeout(() => {
-                        window.location.href = "http://localhost/rseti/generate_pdf.php";
+                        window.location.href = "generate_pdf.php";
                     }, 2000);
                 }
             }
