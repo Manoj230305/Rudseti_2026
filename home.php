@@ -273,6 +273,24 @@ if (isset($_SESSION['batch'])) {
             font-size: 1.1rem;
             margin-top: 1px;
         }
+
+        /* Custom Pills Styling */
+        .nav-pills .nav-link {
+            color: #64748b;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            transition: all 0.2s ease;
+        }
+        .nav-pills .nav-link:hover {
+            color: #1e293b;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #284266 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 10px rgba(40, 66, 102, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -312,45 +330,179 @@ if (isset($_SESSION['batch'])) {
             <!-- Left Column: Upload Form -->
             <div class="col-lg-7">
                 <div class="card-custom">
-                    <h3 class="card-title-custom">
+                    <h3 class="card-title-custom mb-3">
                         <i class="bi bi-file-earmark-arrow-up text-primary"></i>
-                        Upload Training Batch
+                        Certificate Generator
                     </h3>
 
-                    <form action="process.php" method="post" enctype="multipart/form-data">
-                        
-                        <!-- Sponsor Input -->
-                        <div class="mb-4">
-                            <label for="volunteer-name" class="form-label-custom">Sponsoring Agency</label>
-                            <div class="input-group-custom">
-                                <i class="bi bi-briefcase input-icon"></i>
-                                <input type="text" name="Sponsors" id="volunteer-name" class="form-control-custom" placeholder="Sponsor name (e.g., RUDSETI, NRLM)" required>
-                            </div>
-                        </div>
-
-                        <!-- Upload Zone -->
-                        <div class="mb-2">
-                            <label class="form-label-custom">Batch Spreadsheet</label>
-                            <label for="inputGroupFile02" class="upload-zone">
-                                <input type="file" name="excel_file" class="d-none" id="inputGroupFile02" accept=".xlsx, .xls" required>
-                                <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                                <span class="upload-text">Choose Excel Spreadsheet</span>
-                                <span class="upload-subtext">Drag and drop or click to browse files</span>
-                            </label>
-                        </div>
-
-                        <!-- File Preview Zone -->
-                        <div id="demo" class="file-preview"></div>
-
-                        <!-- Submit Button -->
-                        <div class="pt-2">
-                            <button type="submit" class="btn-submit-custom">
-                                <i class="bi bi-gear-fill"></i>
-                                Process Spreadsheet
+                    <!-- Tab Switcher -->
+                    <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist" style="background: #f1f5f9; padding: 6px; border-radius: 10px;">
+                        <li class="nav-item w-50" role="presentation">
+                            <button class="nav-link active w-100 py-2 fw-semibold border-0 text-center" id="pills-upload-tab" data-bs-toggle="pill" data-bs-target="#pills-upload" type="button" role="tab" aria-controls="pills-upload" aria-selected="true">
+                                <i class="bi bi-file-earmark-spreadsheet me-2"></i>Upload Batch
                             </button>
+                        </li>
+                        <li class="nav-item w-50" role="presentation">
+                            <button class="nav-link w-100 py-2 fw-semibold border-0 text-center" id="pills-manual-tab" data-bs-toggle="pill" data-bs-target="#pills-manual" type="button" role="tab" aria-controls="pills-manual" aria-selected="false">
+                                <i class="bi bi-pencil-square me-2"></i>Manual Entry
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="pills-tabContent">
+                        <!-- Spreadsheet Upload Tab -->
+                        <div class="tab-pane fade show active" id="pills-upload" role="tabpanel" aria-labelledby="pills-upload-tab">
+                            <form action="process.php" method="post" enctype="multipart/form-data">
+                                
+                                <!-- Sponsor Input -->
+                                <div class="mb-4">
+                                    <label for="volunteer-name" class="form-label-custom">Sponsoring Agency</label>
+                                    <div class="input-group-custom">
+                                        <i class="bi bi-briefcase input-icon"></i>
+                                        <input type="text" name="Sponsors" id="volunteer-name" class="form-control-custom" placeholder="Sponsor name (e.g., RUDSETI, NRLM)" required>
+                                    </div>
+                                </div>
+
+                                <!-- Upload Zone -->
+                                <div class="mb-2">
+                                    <label class="form-label-custom">Batch Spreadsheet</label>
+                                    <label for="inputGroupFile02" class="upload-zone">
+                                        <input type="file" name="excel_file" class="d-none" id="inputGroupFile02" accept=".xlsx, .xls" required>
+                                        <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                        <span class="upload-text">Choose Excel Spreadsheet</span>
+                                        <span class="upload-subtext">Drag and drop or click to browse files</span>
+                                    </label>
+                                </div>
+
+                                <!-- File Preview Zone -->
+                                <div id="demo" class="file-preview"></div>
+
+                                <!-- Submit Button -->
+                                <div class="pt-2">
+                                    <button type="submit" class="btn-submit-custom">
+                                        <i class="bi bi-gear-fill"></i>
+                                        Process Spreadsheet
+                                    </button>
+                                </div>
+
+                            </form>
                         </div>
 
-                    </form>
+                        <!-- Manual Entry Tab -->
+                        <div class="tab-pane fade" id="pills-manual" role="tabpanel" aria-labelledby="pills-manual-tab">
+                            <form action="process_manual.php" method="post" enctype="multipart/form-data">
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-batch" class="form-label-custom">Batch Number</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-folder2 input-icon"></i>
+                                            <input type="text" name="batch" id="manual-batch" class="form-control-custom" placeholder="e.g., 1045" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-roll" class="form-label-custom">Roll Number</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-hash input-icon"></i>
+                                            <input type="text" name="roll_no" id="manual-roll" class="form-control-custom" placeholder="e.g., 12" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-candidate" class="form-label-custom">Candidate ID</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-person-badge input-icon"></i>
+                                            <input type="text" name="candidate_id" id="manual-candidate" class="form-control-custom" placeholder="Candidate ID" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-name" class="form-label-custom">Candidate Name</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-person input-icon"></i>
+                                            <input type="text" name="customer_name" id="manual-name" class="form-control-custom" placeholder="Full Name" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-father" class="form-label-custom">Father's Name</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-person-fill input-icon"></i>
+                                            <input type="text" name="Dependent_name" id="manual-father" class="form-control-custom" placeholder="Father's name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-sponsor" class="form-label-custom">Sponsoring Agency</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-briefcase input-icon"></i>
+                                            <input type="text" name="Sponsors" id="manual-sponsor" class="form-control-custom" placeholder="e.g., RUDSETI, NRLM" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-start" class="form-label-custom">Start Date</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-calendar-event input-icon"></i>
+                                            <input type="text" name="Start_Date" id="manual-start" class="form-control-custom" placeholder="e.g., 20-04-2026" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="manual-end" class="form-label-custom">End Date</label>
+                                        <div class="input-group-custom mb-0">
+                                            <i class="bi bi-calendar-check input-icon"></i>
+                                            <input type="text" name="End_Date" id="manual-end" class="form-control-custom" placeholder="e.g., 10-05-2026" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Program Name -->
+                                <div class="mb-4">
+                                    <label for="manual-program" class="form-label-custom">Program Name</label>
+                                    <div class="input-group-custom mb-0">
+                                        <i class="bi bi-journal-text input-icon"></i>
+                                        <input type="text" name="Training" id="manual-program" class="form-control-custom" placeholder="Program name (e.g., Electrician, Dress Designing)" required>
+                                    </div>
+                                </div>
+
+                                <!-- Address -->
+                                <div class="mb-4">
+                                    <label for="manual-address" class="form-label-custom">Address</label>
+                                    <div class="input-group-custom mb-0">
+                                        <i class="bi bi-geo-alt input-icon"></i>
+                                        <input type="text" name="address" id="manual-address" class="form-control-custom" placeholder="Complete address" required>
+                                    </div>
+                                </div>
+
+                                <!-- Photo Upload Zone -->
+                                <div class="mb-4">
+                                    <label class="form-label-custom">Candidate Photo</label>
+                                    <label for="inputGroupFile03" class="upload-zone py-3 mb-0" style="padding: 15px 20px;">
+                                        <input type="file" name="user_image" class="d-none" id="inputGroupFile03" accept="image/*">
+                                        <i class="bi bi-image upload-icon fs-4 mb-1"></i>
+                                        <span class="upload-text text-sm">Choose Photo (Optional)</span>
+                                        <span class="upload-subtext small">Click to upload JPG/PNG</span>
+                                    </label>
+                                </div>
+
+                                <!-- File Preview Zone -->
+                                <div id="demo-manual" class="file-preview mb-3"></div>
+
+                                <!-- Submit Button -->
+                                <div class="pt-2">
+                                    <button type="submit" class="btn-submit-custom">
+                                        <i class="bi bi-patch-check-fill"></i>
+                                        Generate Certificate
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -426,6 +578,29 @@ if (isset($_SESSION['batch'])) {
                     document.getElementById("demo").innerHTML = ''; // Clear the preview area
                 });
             });
+        });
+
+        document.getElementById('inputGroupFile03').addEventListener('change', function(event) {
+            var x = document.getElementById("inputGroupFile03");
+            var txt = "";
+            if ('files' in x) {
+                if (x.files.length > 0) {
+                    var file = x.files[0];
+                    txt += "<div class='file-preview-item'>";
+                    txt += "<span><i class='bi bi-image text-success me-2 fs-5 align-middle'></i>" + file.name + " </span>";
+                    txt += "<button type='button' class='btn-remove-manual border-0 bg-transparent text-danger ms-2'><i class='bi bi-x-lg'></i></button></div>";
+                }
+            } 
+            document.getElementById("demo-manual").innerHTML = txt;
+
+            // Add event listener for remove button
+            var removeBtn = document.querySelector('.btn-remove-manual');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    x.value = ''; // Clear the file input
+                    document.getElementById("demo-manual").innerHTML = ''; // Clear the preview area
+                });
+            }
         });
     </script>
 

@@ -227,8 +227,13 @@ class Certificates
         imagedestroy($userImage);
         imagedestroy($userImageResized);
 
-        // Redirect to data.php
-        header("Location: data.php");
+        // Redirect to appropriate page
+        if (isset($_SESSION['manual']) && $_SESSION['manual'] === true) {
+            unset($_SESSION['manual']); // Clear it so it doesn't persist
+            header("Location: generate_pdf.php");
+        } else {
+            header("Location: data.php");
+        }
         exit();
     }
 }
